@@ -45,18 +45,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
             //// TIMER
-            let deadline = '2020-03-06';
+            let deadline = '2020-03-06',
+                region = 6;
 
             function getTimeRemaining(endtime) {
-                let t = Date.parse(endtime) - Date.parse(new Date()),
-                    seconds = Math.floor((t / 1000) % 60),
-                    minutes = Math.floor((t / 1000 / 60) % 60),
-                    hours = Math.floor(((t / 1000 / 60 / 60)-6) % 24),
-                    days = Math.floor((t / 1000 / 60 / 60 / 24));
+                let time = Date.parse(deadline) - Date.parse(new Date()),
+                    seconds = Math.floor((time / 1000) % 60),
+                    minutes = Math.floor((time / 1000 / 60) % 60),
+                    hours = Math.floor(((time / 1000 / 60 / 60)-region) % 24),
+                    days = Math.floor((time / 1000 / 60 / 60 / 24));
 
                     return {
 
-                        'total': t,
+                        'total': time,
                         'days': days,
                         'hours': hours,
                         'minutes': minutes,
@@ -108,12 +109,9 @@ window.addEventListener('DOMContentLoaded', function () {
                         }
 
 
-                        // hours.textContent = t.hours - 6;
-                        // minutes.textContent = t.minutes;
-                        // seconds.textContent = t.seconds;
-
                         if (t.total <= 0) {
                             clearInterval(timeInterval);
+
                         }
                     }
 
