@@ -72,6 +72,7 @@ window.addEventListener('DOMContentLoaded', function () {
             minutes = timer.querySelector('.minutes'),
             seconds = timer.querySelector('.seconds'),
             timeInterval = setInterval(updateClock, 1000);
+        // timer.style.padding = '20px';
 
         function updateClock() {
             let t = getTimeRemaining(endtime);
@@ -117,8 +118,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
     }
     SetClock('timer', deadline);
 
@@ -146,24 +145,162 @@ window.addEventListener('DOMContentLoaded', function () {
         close.addEventListener('click', function (event) {
             overlay.style.display = 'none';
             document.body.style.overflow = '';
-    
+
             this.classList.remove('more-splash');
-    
-    
+
+
         }.bind(event.target));
+
+
+    });
+
+    //Form
+
+    /* Инициализируем маски для каждого из них */
+    var inputs = document.querySelectorAll('input[type="tel"]');
+
+    //   Array.prototype.forEach.call(inputs, function(input) {
+    //     new InputMask({
+    //       selector: input,
+    //       layout: input.dataset.mask // читаем дата-атрибут, установленный в html и устанавливаем его значение в качестве маски
+    //     })
+    //   })
+
+
+    //   Одиночный вызов может выглядеть так: 
+
+    new InputMask({
+        selector: '#tel',
+        layout: '+7(___) ___-__-__'
+    });
+
+    let message = {
+        loading: 'Загрузка...',
+        success: 'Спасибо! Скоро мы с вами свяжемся.',
+        failure: 'Что- то пошло не так!'
+
+    };
+
+    let form = document.querySelector('.main-form'),
+        formContact = document.querySelector('#form'),
+        input = form.getElementsByTagName('input'),
+        input2 = formContact.getElementsByTagName('input'),
+        statusMessadge = document.createElement('div');
+
+    statusMessadge.classList.add('status');
+
+    function setTime2() {
+
+        let timeInterval = setTimeout(updateClock, 4000);
+        function updateClock() {
+            statusMessadge.textContent = '';
+            
+            clearTimeout(timeInterval);
+            
+        }
+        return false;
+    };
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        form.appendChild(statusMessadge);
+
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON
+
+        let formData = new FormData(form);
+
+        //JSON
+        let obj = {};
+        formData.forEach(function (value, key) {
+            obj[key] = value;
+        });
+        let json = JSON.stringify(obj);
+
+        request.send(json);
+        //JSON
+
+
+
+        //для HTML
+        // request.send(formData);
+
         
+        form.style.height = '150px';
+        request.addEventListener('readystatechange', () => {
+            if (request.readyState < 4) {
+                statusMessadge.textContent = message.loading;
+            } else if (request.readyState === 4 && request.status == 200) {
+                statusMessadge.textContent = message.success;
+                setTime2();
+            } else {
+                statusMessadge.textContent = message.failure;
+            }
+
+
+        });
+
+        for (let i = 0; i < input.length; i++) {
+            input[i].value = '';
+        }
 
     });
 
 
 
-   
+
+
+    formContact.addEventListener('submit', function (event) {
+        event.preventDefault();
+        formContact.appendChild(statusMessadge);
+
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON
+
+        let formData = new FormData(formContact);
+
+        //JSON
+        let obj = {};
+        formData.forEach(function (value, key) {
+            obj[key] = value;
+        });
+        let json = JSON.stringify(obj);
+
+        request.send(json);
+        //JSON
 
 
 
+        //для HTML
+       
+        // request.send(formData);
+        statusMessadge.style.color = 'white';
+        statusMessadge.style.marginTop = '10px';
+        request.addEventListener('readystatechange', () => {
+            if (request.readyState < 4) {
+               
+                statusMessadge.textContent = message.loading;
+            } else if (request.readyState === 4 && request.status == 200) {
+                statusMessadge.textContent = message.success;
+
+                setTime2();
+                
+            } else {
+                statusMessadge.textContent = message.failure;
+            }
 
 
+        });
 
+        for (let i = 0; i < input2.length; i++) {
+            input2[i].value = '';
+        }
+
+    });
 
 
 
@@ -175,8 +312,79 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-window.addEventListener("DOMContentLoaded", function() {
-function setCursorPosition(pos, elem) {
+// window.addEventListener("DOMContentLoaded", function() {
+// function setCursorPosition(pos, elem) {
+//     elem.focus();
+//     if (elem.setSelectionRange) elem.setSelectionRange(pos, pos);
+//     else if (elem.createTextRange) {
+//         var range = elem.createTextRange();
+//         range.collapse(true);
+//         range.moveEnd("character", pos);
+//         range.moveStart("character", pos);
+//         range.select()
+//     }
+// }
+
+// function mask(event) {
+//     var matrix = "+7 (___) ___ ____",
+//         i = 0,
+//         def = matrix.replace(/\D/g, ""),
+//         val = this.value.replace(/\D/g, "");
+//     if (def.length >= val.length) val = def;
+//     this.value = matrix.replace(/./g, function(a) {
+//         return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
+//     });
+//     if (event.type == "blur") {
+//         if (this.value.length == 2) this.value = ""
+//     } else setCursorPosition(this.value.length, this)
+// };
+//     var input = document.getElementsByTagName("input")[4];
+//     input.addEventListener("input", mask, false);
+//     input.addEventListener("focus", mask, false);
+//     input.addEventListener("blur", mask, false);
+// });
+
+
+
+function InputMask(options) {
+    this.el = this.getElement(options.selector);
+    console.log(this.getElement(options.selector));
+    if (!this.el) return console.log('Что-то не так с селектором');
+    this.layout = options.layout || '+_ (___) ___-__-__';
+    this.maskreg = this.getRegexp();
+    this.setListeners();
+}
+
+InputMask.prototype.getRegexp = function () {
+    var str = this.layout.replace(/_/g, '\\d');
+    str = str.replace(/\(/g, '\\(');
+    str = str.replace(/\)/g, '\\)');
+    str = str.replace(/\+/g, '\\+');
+    str = str.replace(/\s/g, '\\s');
+    return str;
+};
+
+InputMask.prototype.mask = function (e) {
+    var _this = e.target,
+        matrix = this.layout,
+        i = 0,
+        def = matrix.replace(/\D/g, ""),
+        val = _this.value.replace(/\D/g, "");
+
+    if (def.length >= val.length) val = def;
+    _this.value = matrix.replace(/./g, function (a) {
+        return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a;
+    });
+
+    if (e.type == "blur") {
+        var regexp = new RegExp(this.maskreg);
+        if (!regexp.test(_this.value)) _this.value = "";
+    } else {
+        this.setCursorPosition(_this.value.length, _this);
+    }
+};
+
+InputMask.prototype.setCursorPosition = function (pos, elem) {
     elem.focus();
     if (elem.setSelectionRange) elem.setSelectionRange(pos, pos);
     else if (elem.createTextRange) {
@@ -184,25 +392,80 @@ function setCursorPosition(pos, elem) {
         range.collapse(true);
         range.moveEnd("character", pos);
         range.moveStart("character", pos);
-        range.select()
+        range.select();
+    }
+};
+
+InputMask.prototype.setListeners = function () {
+    this.el.addEventListener("input", this.mask.bind(this), false);
+    this.el.addEventListener("focus", this.mask.bind(this), false);
+    this.el.addEventListener("blur", this.mask.bind(this), false);
+};
+
+InputMask.prototype.getElement = function (selector) {
+    if (selector === undefined) return false;
+    if (this.isElement(selector)) return selector;
+
+    if (typeof selector == 'string') {
+        var el = document.querySelector(selector);
+        if (this.isElement(el)) return el;
+    }
+
+    return false;
+};
+
+InputMask.prototype.isElement = function (element) {
+    return element instanceof Element || element instanceof HTMLDocument;
+};
+
+class Options {
+    constructor(height, width, background, margin, fontSize, textAlign) {
+        this.height = height + 'px';
+        this.width = width + 'px';
+        this.background = background;
+        this.marginTop = margin + 'px';
+        this.fontSize = fontSize + 'px';
+        this.textAlign = textAlign;
+    }
+
+
+    createDiv() {
+        let wrap = document.querySelector('.description'),
+            div = document.createElement('div');
+        wrap.appendChild(div);
+        div.textContent = 'Hello Boris!';
+        div.style.height = this.height;
+        div.style.width = this.width;
+        div.style.marginTop = this.marginTop;
+        div.style.background = this.background;
+        div.style.fontSize = this.fontSize;
+        div.style.textAlign = this.textAlign;
+        div.style.borderRadius = this.borderRadius;
+        div.classList.add('option');
+
     }
 }
 
-function mask(event) {
-    var matrix = "+7 (___) ___ ____",
-        i = 0,
-        def = matrix.replace(/\D/g, ""),
-        val = this.value.replace(/\D/g, "");
-    if (def.length >= val.length) val = def;
-    this.value = matrix.replace(/./g, function(a) {
-        return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
-    });
-    if (event.type == "blur") {
-        if (this.value.length == 2) this.value = ""
-    } else setCursorPosition(this.value.length, this)
-};
-    var input = document.getElementsByTagName("input")[4];
-    input.addEventListener("input", mask, false);
-    input.addEventListener("focus", mask, false);
-    input.addEventListener("blur", mask, false);
-});
+class Passion extends Options {
+    constructor(height, width, background, margin, fontSize, textAlign, borderRadius) {
+        super(height, width, background, margin, fontSize, textAlign);
+        this.borderRadius = borderRadius + 'px';
+    }
+
+    Adds() {
+
+        super.createDiv();
+
+    }
+
+}
+
+let divs = new Options(40, 180, 'yellow', 10, 25, 'center');
+divs.createDiv();
+// console.log(typeof divs.createDiv);
+
+let der = new Passion(40, 180, 'blue', 10, 25, 'center', 5);
+der.Adds();
+//   der.createDiv();
+console.log(divs);
+console.log(der);
