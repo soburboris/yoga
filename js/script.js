@@ -186,66 +186,87 @@ window.addEventListener('DOMContentLoaded', function () {
         input = form.getElementsByTagName('input'),
         input2 = formContact.getElementsByTagName('input'),
         statusMessadge = document.createElement('div');
-
     statusMessadge.classList.add('status');
+    form.style.height = '150px';
 
-    function setTime2() {
+    function setText() {
 
-        let timeInterval = setTimeout(updateClock, 4000);
-        function updateClock() {
+        let timeInterval = setTimeout(updateText, 3000);
+
+        function updateText() {
             statusMessadge.textContent = '';
-            
+
             clearTimeout(timeInterval);
-            
+
         }
-        return false;
+        
     };
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         form.appendChild(statusMessadge);
-
-        let request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
-        request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON
-
         let formData = new FormData(form);
+        console.log(formData);
 
-        //JSON
-        let obj = {};
-        formData.forEach(function (value, key) {
-            obj[key] = value;
-        });
-        let json = JSON.stringify(obj);
+        function postData(formData) {
 
-        request.send(json);
-        //JSON
+            return new Promise(function (resolve, reject) {
+                let request = new XMLHttpRequest();
+                request.open('POST', 'server.php');
+                // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
+                request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON
 
+                request.onreadystatechange =  () => {
+                    if (request.readyState < 4) {
+                        resolve()
 
+                    } else if (request.readyState === 4) {
+                        if (request.status == 200 && request.status < 300) {
+                            resolve()
+                        } else {
+                            reject()
+                        }
+                    }
+                }
+                //JSON
+                let obj = {};
+                formData.forEach(function (value, key) {
+                    obj[key] = value;
+                });
+                let json = JSON.stringify(obj);
+                //JSON
 
-        //для HTML
-        // request.send(formData);
-
-        
-        form.style.height = '150px';
-        request.addEventListener('readystatechange', () => {
-            if (request.readyState < 4) {
-                statusMessadge.textContent = message.loading;
-            } else if (request.readyState === 4 && request.status == 200) {
-                statusMessadge.textContent = message.success;
-                setTime2();
-            } else {
-                statusMessadge.textContent = message.failure;
-            }
-
-
-        });
-
-        for (let i = 0; i < input.length; i++) {
-            input[i].value = '';
+                //JSON
+                request.send(json);
+                //для HTML
+                
+            })
         }
 
+        function clearInput() {
+
+            for (let i = 0; i < input.length; i++) {
+                input[i].value = '';
+            }
+
+        }
+
+        postData(formData)
+            .then(() => {
+                statusMessadge.textContent = message.loading;
+                setText();
+            })
+            .then(() => {
+                statusMessadge.textContent = message.success;
+                setText();
+            })
+            .catch(() => {
+                statusMessadge.textContent = message.failure;
+                setText();
+            })
+            .then(clearInput)
+
+           
     });
 
 
@@ -274,25 +295,22 @@ window.addEventListener('DOMContentLoaded', function () {
         //JSON
 
 
-
         //для HTML
-       
         // request.send(formData);
+
         statusMessadge.style.color = 'white';
         statusMessadge.style.marginTop = '10px';
         request.addEventListener('readystatechange', () => {
             if (request.readyState < 4) {
-               
                 statusMessadge.textContent = message.loading;
+                setText();
             } else if (request.readyState === 4 && request.status == 200) {
                 statusMessadge.textContent = message.success;
-
-                setTime2();
-                
+                setText();
             } else {
                 statusMessadge.textContent = message.failure;
+                setText();
             }
-
 
         });
 
@@ -302,13 +320,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
     });
 
-
-
-
-
-
-
 });
+
+
 
 
 
