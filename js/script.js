@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
     //// TIMER
-    let deadline = '2020-03-06',
+    let deadline = '2020-03-11',
         region = 6;
 
     function getTimeRemaining(endtime) {
@@ -199,14 +199,14 @@ window.addEventListener('DOMContentLoaded', function () {
             clearTimeout(timeInterval);
 
         }
-        
+
     };
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         form.appendChild(statusMessadge);
         let formData = new FormData(form);
-        console.log(formData);
+        
 
         function postData(formData) {
 
@@ -216,7 +216,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
                 request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON
 
-                request.onreadystatechange =  () => {
+                request.onreadystatechange = () => {
                     if (request.readyState < 4) {
                         resolve()
 
@@ -229,17 +229,16 @@ window.addEventListener('DOMContentLoaded', function () {
                     }
                 }
                 //JSON
-                let obj = {};
                 formData.forEach(function (value, key) {
-                    obj[key] = value;
+                    formData[key] = value;
                 });
-                let json = JSON.stringify(obj);
+                let json = JSON.stringify(formData);
                 //JSON
 
                 //JSON
                 request.send(json);
                 //для HTML
-                
+
             })
         }
 
@@ -266,7 +265,7 @@ window.addEventListener('DOMContentLoaded', function () {
             })
             .then(clearInput)
 
-           
+
     });
 
 
@@ -285,11 +284,11 @@ window.addEventListener('DOMContentLoaded', function () {
         let formData = new FormData(formContact);
 
         //JSON
-        let obj = {};
+       
         formData.forEach(function (value, key) {
-            obj[key] = value;
+            formData[key] = value;
         });
-        let json = JSON.stringify(obj);
+        let json = JSON.stringify(formData);
 
         request.send(json);
         //JSON
@@ -320,7 +319,146 @@ window.addEventListener('DOMContentLoaded', function () {
 
     });
 
+    //v 
+
+    let sliderIndex = 1,
+        slides = document.querySelectorAll('.slider-item'),
+        prev = document.querySelector('.prev'),
+        next = document.querySelector('.next'),
+        dotsWarp = document.querySelector('.slider-dots'),
+        dots = document.querySelectorAll('.dot');
+    showSlides(1);
+    autoSlides();
+
+    document.body.addEventListener('mouseover', (event) => {
+        if (event.target && event.target.tagName == 'IMG') {
+
+            prev.style.display = '';
+            next.style.display = '';
+        }
+    });
+
+    function autoSlides() {
+        setInterval(() => {
+            showSlides(sliderIndex);
+            sliderIndex++;
+            prev.style.display = 'none';
+            next.style.display = 'none';
+        }, 6000);
+
+
+
+
+    }
+
+    function showSlides(n) {
+        if (n > slides.length) {
+            sliderIndex = 1;
+        }
+        if (n < 1) {
+            sliderIndex = slides.length;
+        }
+
+        slides.forEach((item) => {
+            item.style.display = 'none'
+        });
+
+        dots.forEach((item) => {
+            item.classList.remove('dot-active')
+        });
+
+        slides[sliderIndex - 1].style.display = '';
+        dots[sliderIndex - 1].classList.add('dot-active');
+    }
+
+    function plusSlides(n) {
+        showSlides(sliderIndex += n);
+    }
+
+    function currentSlides(n) {
+        showSlides(sliderIndex = n);
+    }
+
+    prev.addEventListener('click', () => {
+        plusSlides(-1);
+    });
+
+    next.addEventListener('click', () => {
+        plusSlides(1);
+    });
+
+    dotsWarp.addEventListener('click', (event) => {
+        for (let i = 0; i < dots.length + 1; i++) {
+            if (event.target == dots[i - 1] && event.target.classList.contains('dot')) {
+                currentSlides(i);
+            }
+        }
+
+    });
+
+    //Calc //localStorage
+
+    let persons = document.querySelectorAll('.counter-block-input')[0],
+        restDays = document.querySelectorAll('.counter-block-input')[1],
+        place = document.getElementById('select'),
+        totalValue = document.getElementById('total'),
+        personsSum = 0,
+        daysSum = 0,
+        total = 0;
+
+    totalValue.textContent = 0;
+
+    persons.addEventListener('change', function () {
+        personsSum = +this.value;
+        localStorage.setItem("people", personsSum);
+        total = (daysSum + personsSum) * 7000;
+
+        if (restDays.value == '' && isNaN(restDays)) {
+            totalValue.textContent = 0;
+
+        } else if (persons.value == '') {
+            totalValue.textContent = 0;
+
+        } else {
+            totalValue.textContent = total;
+        }
+    });
+
+    restDays.addEventListener('change', function () {
+        daysSum = +this.value;
+        localStorage.setItem("days", daysSum);
+        total = (daysSum + personsSum) * 7000;
+
+        if (persons.value == '' && isNaN(persons)) {
+            totalValue.textContent = 0;
+
+        } else if (restDays.value == '') {
+            totalValue.textContent = 0;
+
+        } else {
+            totalValue.textContent = total;
+        }
+    });
+
+
+    place.addEventListener('change', function () {
+        if (restDays.value == '' || persons.value == '') {
+            totalValue.textContent = 0;
+        } else {
+            let a = total;
+
+            totalValue.textContent = a * this.options[this.selectedIndex].value;
+        }
+
+    });
+
+
+
+
+
+
 });
+
 
 
 
@@ -432,54 +570,54 @@ InputMask.prototype.isElement = function (element) {
     return element instanceof Element || element instanceof HTMLDocument;
 };
 
-class Options {
-    constructor(height, width, background, margin, fontSize, textAlign) {
-        this.height = height + 'px';
-        this.width = width + 'px';
-        this.background = background;
-        this.marginTop = margin + 'px';
-        this.fontSize = fontSize + 'px';
-        this.textAlign = textAlign;
-    }
+// class Options {
+//     constructor(height, width, background, margin, fontSize, textAlign) {
+//         this.height = height + 'px';
+//         this.width = width + 'px';
+//         this.background = background;
+//         this.marginTop = margin + 'px';
+//         this.fontSize = fontSize + 'px';
+//         this.textAlign = textAlign;
+//     }
 
 
-    createDiv() {
-        let wrap = document.querySelector('.description'),
-            div = document.createElement('div');
-        wrap.appendChild(div);
-        div.textContent = 'Hello Boris!';
-        div.style.height = this.height;
-        div.style.width = this.width;
-        div.style.marginTop = this.marginTop;
-        div.style.background = this.background;
-        div.style.fontSize = this.fontSize;
-        div.style.textAlign = this.textAlign;
-        div.style.borderRadius = this.borderRadius;
-        div.classList.add('option');
+//     createDiv() {
+//         let wrap = document.querySelector('.description'),
+//             div = document.createElement('div');
+//         wrap.appendChild(div);
+//         div.textContent = 'Hello Boris!';
+//         div.style.height = this.height;
+//         div.style.width = this.width;
+//         div.style.marginTop = this.marginTop;
+//         div.style.background = this.background;
+//         div.style.fontSize = this.fontSize;
+//         div.style.textAlign = this.textAlign;
+//         div.style.borderRadius = this.borderRadius;
+//         div.classList.add('option');
 
-    }
-}
+//     }
+// }
 
-class Passion extends Options {
-    constructor(height, width, background, margin, fontSize, textAlign, borderRadius) {
-        super(height, width, background, margin, fontSize, textAlign);
-        this.borderRadius = borderRadius + 'px';
-    }
+// class Passion extends Options {
+//     constructor(height, width, background, margin, fontSize, textAlign, borderRadius) {
+//         super(height, width, background, margin, fontSize, textAlign);
+//         this.borderRadius = borderRadius + 'px';
+//     }
 
-    Adds() {
+//     Adds() {
 
-        super.createDiv();
+//         super.createDiv();
 
-    }
+//     }
 
-}
+// }
 
-let divs = new Options(40, 180, 'yellow', 10, 25, 'center');
-divs.createDiv();
-// console.log(typeof divs.createDiv);
+// let divs = new Options(40, 180, 'yellow', 10, 25, 'center');
+// divs.createDiv();
+// // console.log(typeof divs.createDiv);
 
-let der = new Passion(40, 180, 'blue', 10, 25, 'center', 5);
-der.Adds();
-//   der.createDiv();
-console.log(divs);
-console.log(der);
+// let der = new Passion(40, 180, 'blue', 10, 25, 'center', 5);
+// der.Adds();
+// //   der.createDiv();
+// console.log(divs);
+// console.log(der);
