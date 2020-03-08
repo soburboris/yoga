@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
     //// TIMER
-    let deadline = '2020-03-11',
+    let deadline = '2020-04-30',
         region = 6;
 
     function getTimeRemaining(endtime) {
@@ -206,7 +206,7 @@ window.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         form.appendChild(statusMessadge);
         let formData = new FormData(form);
-        
+
 
         function postData(formData) {
 
@@ -276,6 +276,8 @@ window.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         formContact.appendChild(statusMessadge);
 
+
+
         let request = new XMLHttpRequest();
         request.open('POST', 'server.php');
         // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
@@ -283,12 +285,15 @@ window.addEventListener('DOMContentLoaded', function () {
 
         let formData = new FormData(formContact);
 
+
         //JSON
-       
+
         formData.forEach(function (value, key) {
             formData[key] = value;
+
         });
         let json = JSON.stringify(formData);
+
 
         request.send(json);
         //JSON
@@ -317,9 +322,14 @@ window.addEventListener('DOMContentLoaded', function () {
             input2[i].value = '';
         }
 
+        
+
     });
 
-    //v 
+  
+
+
+    //slider
 
     let sliderIndex = 1,
         slides = document.querySelectorAll('.slider-item'),
