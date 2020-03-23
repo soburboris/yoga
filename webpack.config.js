@@ -5,7 +5,7 @@ let path = require('path');
 
 
 module.exports = {
-  mode: 'none',
+  mode: 'development',
   entry: './src/js/script.js',
   output: {
     filename: 'bundle.js',
@@ -39,7 +39,7 @@ module.exports = {
   //       }
   //     }
   //   ]
-  // }
+  // },
   // plugins: [
   //   new UglifyJsPlugin()
   // ]

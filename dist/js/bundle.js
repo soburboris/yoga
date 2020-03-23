@@ -81,665 +81,97 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/js/script.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ "./src/js/parts/calc.js":
+/*!******************************!*\
+  !*** ./src/js/parts/calc.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function calc() {\r\n    let persons = document.querySelectorAll('.counter-block-input')[0],\r\n        restDays = document.querySelectorAll('.counter-block-input')[1],\r\n        place = document.getElementById('select'),\r\n        totalValue = document.getElementById('total'),\r\n        personsSum = 0,\r\n        daysSum = 0,\r\n        total = 0;\r\n\r\n    totalValue.textContent = 0;\r\n\r\n    persons.addEventListener('change', function () {\r\n        personsSum = +this.value;\r\n        localStorage.setItem(\"people\", personsSum);\r\n        total = (daysSum + personsSum) * 7000;\r\n\r\n        if (restDays.value == '' && isNaN(restDays)) {\r\n            totalValue.textContent = 0;\r\n\r\n        } else if (persons.value == '') {\r\n            totalValue.textContent = 0;\r\n\r\n        } else {\r\n            totalValue.textContent = total;\r\n        }\r\n    });\r\n\r\n    restDays.addEventListener('change', function () {\r\n        daysSum = +this.value;\r\n        localStorage.setItem(\"days\", daysSum);\r\n        total = (daysSum + personsSum) * 7000;\r\n\r\n        if (persons.value == '' && isNaN(persons)) {\r\n            totalValue.textContent = 0;\r\n\r\n        } else if (restDays.value == '') {\r\n            totalValue.textContent = 0;\r\n\r\n        } else {\r\n            totalValue.textContent = total;\r\n        }\r\n    });\r\n\r\n\r\n    place.addEventListener('change', function () {\r\n        if (restDays.value == '' || persons.value == '') {\r\n            totalValue.textContent = 0;\r\n        } else {\r\n            let a = total;\r\n\r\n            totalValue.textContent = a * this.options[this.selectedIndex].value;\r\n        }\r\n\r\n    });\r\n\r\n}\r\n\r\nmodule.exports = calc;\n\n//# sourceURL=webpack:///./src/js/parts/calc.js?");
+
+/***/ }),
+
+/***/ "./src/js/parts/form.js":
+/*!******************************!*\
+  !*** ./src/js/parts/form.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function form() {\r\n    //Form\r\n  \r\n    \r\n\r\n    \r\n\r\n    let message = {\r\n        loading: 'Загрузка...',\r\n        success: 'Спасибо! Скоро мы с вами свяжемся.',\r\n        failure: 'Что- то пошло не так!'\r\n\r\n    };\r\n\r\n    let form = document.querySelector('.main-form'),\r\n        formContact = document.querySelector('#form'),\r\n        input = form.getElementsByTagName('input'),\r\n        input2 = formContact.getElementsByTagName('input'),\r\n        statusMessadge = document.createElement('div');\r\n    statusMessadge.classList.add('status');\r\n    form.style.height = '150px';\r\n\r\n    function setText() {\r\n\r\n        let timeInterval = setTimeout(updateText, 3000);\r\n\r\n        function updateText() {\r\n            statusMessadge.textContent = '';\r\n\r\n            clearTimeout(timeInterval);\r\n\r\n        }\r\n\r\n    };\r\n\r\n    form.addEventListener('submit', function (event) {\r\n        event.preventDefault();\r\n        form.appendChild(statusMessadge);\r\n        let formData = new FormData(form);\r\n\r\n\r\n        function postData(formData) {\r\n\r\n            return new Promise(function (resolve, reject) {\r\n                let request = new XMLHttpRequest();\r\n                request.open('POST', 'server.php');\r\n                // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML\r\n                request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON\r\n\r\n                request.onreadystatechange = () => {\r\n                    if (request.readyState < 4) {\r\n                        resolve()\r\n\r\n                    } else if (request.readyState === 4) {\r\n                        if (request.status == 200 && request.status < 300) {\r\n                            resolve()\r\n                        } else {\r\n                            reject()\r\n                        }\r\n                    }\r\n                }\r\n                //JSON\r\n                formData.forEach(function (value, key) {\r\n                    formData[key] = value;\r\n                });\r\n                let json = JSON.stringify(formData);\r\n                //JSON\r\n\r\n                //JSON\r\n                request.send(json);\r\n                //для HTML\r\n\r\n            })\r\n        }\r\n\r\n        function clearInput() {\r\n\r\n            for (let i = 0; i < input.length; i++) {\r\n                input[i].value = '';\r\n            }\r\n\r\n        }\r\n\r\n        postData(formData)\r\n            .then(() => {\r\n                statusMessadge.textContent = message.loading;\r\n                setText();\r\n            })\r\n            .then(() => {\r\n                statusMessadge.textContent = message.success;\r\n                setText();\r\n            })\r\n            .catch(() => {\r\n                statusMessadge.textContent = message.failure;\r\n                setText();\r\n            })\r\n            .then(clearInput)\r\n\r\n\r\n    });\r\n\r\n\r\n\r\n\r\n\r\n    formContact.addEventListener('submit', function (event) {\r\n        event.preventDefault();\r\n        formContact.appendChild(statusMessadge);\r\n\r\n\r\n\r\n        let request = new XMLHttpRequest();\r\n        request.open('POST', 'server.php');\r\n        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML\r\n        request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON\r\n\r\n        let formData = new FormData(formContact);\r\n\r\n\r\n        //JSON\r\n\r\n        formData.forEach(function (value, key) {\r\n            formData[key] = value;\r\n\r\n        });\r\n        let json = JSON.stringify(formData);\r\n\r\n\r\n        request.send(json);\r\n        //JSON\r\n\r\n\r\n        //для HTML\r\n        // request.send(formData);\r\n\r\n        statusMessadge.style.color = 'white';\r\n        statusMessadge.style.marginTop = '10px';\r\n        request.addEventListener('readystatechange', () => {\r\n            if (request.readyState < 4) {\r\n                statusMessadge.textContent = message.loading;\r\n                setText();\r\n            } else if (request.readyState === 4 && request.status == 200) {\r\n                statusMessadge.textContent = message.success;\r\n                setText();\r\n            } else {\r\n                statusMessadge.textContent = message.failure;\r\n                setText();\r\n            }\r\n\r\n        });\r\n\r\n        for (let i = 0; i < input2.length; i++) {\r\n            input2[i].value = '';\r\n        }\r\n\r\n        \r\n\r\n    });\r\n\r\n}\r\n\r\nmodule.exports = form;\n\n//# sourceURL=webpack:///./src/js/parts/form.js?");
+
+/***/ }),
+
+/***/ "./src/js/parts/modal.js":
+/*!*******************************!*\
+  !*** ./src/js/parts/modal.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function modal() {\r\n    \r\n    document.body.addEventListener('click', function (event) {\r\n        let overlay = document.querySelector('.overlay'),\r\n            close = document.querySelector('.popup-close');\r\n\r\n        if (event.target && event.target.classList.contains('description-btn')) {\r\n\r\n            overlay.style.display = 'block';\r\n            event.target.classList.add('more-splash');\r\n            document.body.style.overflow = 'hidden';\r\n        } else if (event.target && event.target.classList.contains('more')) {\r\n\r\n            overlay.style.display = 'block';\r\n            event.target.classList.add('more-splash');\r\n            document.body.style.overflow = 'hidden';\r\n        }\r\n\r\n        close.addEventListener('click', function (event) {\r\n            overlay.style.display = 'none';\r\n            document.body.style.overflow = '';\r\n\r\n            this.classList.remove('more-splash');\r\n\r\n\r\n        }.bind(event.target));\r\n\r\n\r\n    });\r\n}\r\n\r\nmodule.exports = modal;\n\n//# sourceURL=webpack:///./src/js/parts/modal.js?");
+
+/***/ }),
+
+/***/ "./src/js/parts/slider.js":
+/*!********************************!*\
+  !*** ./src/js/parts/slider.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function slider() {\r\n    let sliderIndex = 1,\r\n        slides = document.querySelectorAll('.slider-item'),\r\n        prev = document.querySelector('.prev'),\r\n        next = document.querySelector('.next'),\r\n        dotsWarp = document.querySelector('.slider-dots'),\r\n        dots = document.querySelectorAll('.dot');\r\n    showSlides(1);\r\n    autoSlides();\r\n\r\n    document.body.addEventListener('mouseover', (event) => {\r\n        if (event.target && event.target.tagName == 'IMG') {\r\n\r\n            prev.style.display = '';\r\n            next.style.display = '';\r\n        }\r\n    });\r\n\r\n    function autoSlides() {\r\n        setInterval(() => {\r\n            showSlides(sliderIndex);\r\n            sliderIndex++;\r\n            prev.style.display = 'none';\r\n            next.style.display = 'none';\r\n        }, 6000);\r\n\r\n\r\n\r\n\r\n    }\r\n\r\n    function showSlides(n) {\r\n        if (n > slides.length) {\r\n            sliderIndex = 1;\r\n        }\r\n        if (n < 1) {\r\n            sliderIndex = slides.length;\r\n        }\r\n\r\n        slides.forEach((item) => {\r\n            item.style.display = 'none'\r\n        });\r\n\r\n        dots.forEach((item) => {\r\n            item.classList.remove('dot-active')\r\n        });\r\n\r\n        slides[sliderIndex - 1].style.display = '';\r\n        dots[sliderIndex - 1].classList.add('dot-active');\r\n    }\r\n\r\n    function plusSlides(n) {\r\n        showSlides(sliderIndex += n);\r\n    }\r\n\r\n    function currentSlides(n) {\r\n        showSlides(sliderIndex = n);\r\n    }\r\n\r\n    prev.addEventListener('click', () => {\r\n        plusSlides(-1);\r\n    });\r\n\r\n    next.addEventListener('click', () => {\r\n        plusSlides(1);\r\n    });\r\n\r\n    dotsWarp.addEventListener('click', (event) => {\r\n        for (let i = 0; i < dots.length + 1; i++) {\r\n            if (event.target == dots[i - 1] && event.target.classList.contains('dot')) {\r\n                currentSlides(i);\r\n            }\r\n        }\r\n\r\n    });\r\n\r\n}\r\n\r\nmodule.exports = slider;\n\n//# sourceURL=webpack:///./src/js/parts/slider.js?");
+
+/***/ }),
+
+/***/ "./src/js/parts/tabs.js":
+/*!******************************!*\
+  !*** ./src/js/parts/tabs.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function tabs() {\r\n    let tab = document.querySelectorAll('.info-header-tab'),\r\n        info = document.querySelector('.info-header'),\r\n        tabContent = document.querySelectorAll('.info-tabcontent');\r\n\r\n    function hideTabContent(a) {\r\n        for (let i = a; i < tabContent.length; i++) {\r\n\r\n            tabContent[i].classList.remove('show');\r\n            tabContent[i].classList.add('hide');\r\n        }\r\n    }\r\n\r\n    hideTabContent(1);\r\n\r\n    function showTabContent(b) {\r\n\r\n        if (tabContent[b].classList.contains('hide')) {\r\n\r\n            tabContent[b].classList.remove('hide');\r\n            tabContent[b].classList.add('show');\r\n\r\n\r\n        }\r\n    }\r\n\r\n    info.addEventListener('click', function (event) {\r\n        let target = event.target;\r\n        if (target && target.classList.contains('info-header-tab')) {\r\n            for (let i = 0; i < tab.length; i++) {\r\n                if (target == tab[i]) {\r\n                    hideTabContent(0);\r\n                    showTabContent(i);\r\n                    break;\r\n\r\n                }\r\n\r\n            }\r\n\r\n        }\r\n    });\r\n}\r\n\r\nmodule.exports = tabs;\n\n//# sourceURL=webpack:///./src/js/parts/tabs.js?");
+
+/***/ }),
+
+/***/ "./src/js/parts/tel.js":
+/*!*****************************!*\
+  !*** ./src/js/parts/tel.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function tel() {\r\n   function setCursorPosition(pos, elem) {\r\n    elem.focus();\r\n    if (elem.setSelectionRange) elem.setSelectionRange(pos, pos);\r\n    else if (elem.createTextRange) {\r\n        var range = elem.createTextRange();\r\n        range.collapse(true);\r\n        range.moveEnd(\"character\", pos);\r\n        range.moveStart(\"character\", pos);\r\n        range.select()\r\n    }\r\n}\r\n\r\nfunction mask(event) {\r\n    var matrix = \"+7 (___) ___ ____\",\r\n        i = 0,\r\n        def = matrix.replace(/\\D/g, \"\"),\r\n        val = this.value.replace(/\\D/g, \"\");\r\n    if (def.length >= val.length) val = def;\r\n    this.value = matrix.replace(/./g, function(a) {\r\n        return /[_\\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? \"\" : a\r\n    });\r\n    if (event.type == \"blur\") {\r\n        if (this.value.length == 2) this.value = \"\"\r\n    } else setCursorPosition(this.value.length, this)\r\n};\r\n    var input = document.getElementsByTagName(\"input\")[4];\r\n    input.addEventListener(\"input\", mask, false);\r\n    input.addEventListener(\"focus\", mask, false);\r\n    input.addEventListener(\"blur\", mask, false);\r\n\r\n    var inputs = document.getElementsByTagName(\"input\")[3];\r\n    inputs.addEventListener(\"input\", mask, false);\r\n    inputs.addEventListener(\"focus\", mask, false);\r\n    inputs.addEventListener(\"blur\", mask, false);\r\n\r\n\r\n    \r\n    \r\n}\r\n\r\nmodule.exports = tel;\n\n//# sourceURL=webpack:///./src/js/parts/tel.js?");
+
+/***/ }),
+
+/***/ "./src/js/parts/timer.js":
+/*!*******************************!*\
+  !*** ./src/js/parts/timer.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function timer() {\r\n    let deadline = '2020-04-30',\r\n        region = 6;\r\n\r\n    function getTimeRemaining(endtime) {\r\n        let time = Date.parse(deadline) - Date.parse(new Date()),\r\n            seconds = Math.floor((time / 1000) % 60),\r\n            minutes = Math.floor((time / 1000 / 60) % 60),\r\n            hours = Math.floor(((time / 1000 / 60 / 60) - region) % 24),\r\n            days = Math.floor((time / 1000 / 60 / 60 / 24));\r\n\r\n        return {\r\n\r\n            'total': time,\r\n            'days': days,\r\n            'hours': hours,\r\n            'minutes': minutes,\r\n            'seconds': seconds\r\n        };\r\n    }\r\n\r\n    function SetClock(id, endtime) {\r\n        let timer = document.getElementById(id),\r\n            days = timer.querySelector('.days'),\r\n            hours = timer.querySelector('.hours'),\r\n            minutes = timer.querySelector('.minutes'),\r\n            seconds = timer.querySelector('.seconds'),\r\n            timeInterval = setInterval(updateClock, 1000);\r\n        // timer.style.padding = '20px';\r\n\r\n        function updateClock() {\r\n            let t = getTimeRemaining(endtime);\r\n\r\n            if (t.days >= 10) {\r\n                days.textContent = t.days;\r\n\r\n            } else {\r\n                days.textContent = '0' + t.days;\r\n\r\n            }\r\n\r\n            if (t.hours >= 10) {\r\n                hours.textContent = t.hours;\r\n\r\n            } else {\r\n                hours.textContent = '0' + t.hours;\r\n\r\n            }\r\n\r\n            if (t.minutes >= 10) {\r\n                minutes.textContent = t.minutes;\r\n\r\n            } else {\r\n                minutes.textContent = '0' + t.minutes;\r\n\r\n            }\r\n\r\n            if (t.seconds >= 10) {\r\n                seconds.textContent = t.seconds;\r\n\r\n            } else {\r\n                seconds.textContent = '0' + t.seconds;\r\n\r\n            }\r\n\r\n\r\n            if (t.total <= 0) {\r\n                clearInterval(timeInterval);\r\n\r\n            }\r\n        }\r\n\r\n\r\n\r\n    }\r\n    SetClock('timer', deadline);\r\n\r\n}\r\n\r\nmodule.exports = timer;\n\n//# sourceURL=webpack:///./src/js/parts/timer.js?");
+
+/***/ }),
+
+/***/ "./src/js/script.js":
+/*!**************************!*\
+  !*** ./src/js/script.js ***!
+  \**************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-window.addEventListener('DOMContentLoaded', function () {
-
-    'use strict';
-
-    let tabs = __webpack_require__(1),
-        timer = __webpack_require__(2),
-        modal = __webpack_require__(3),
-        form = __webpack_require__(4),
-        slider = __webpack_require__(5),
-        tel = __webpack_require__(6),
-        calc = __webpack_require__(7);
-
-    tabs();
-    calc();
-    form();
-    slider();
-    timer();
-    modal();
-    tel();
-
-
-
-
-
-
-
-});
-
-
-
-
-
-
-// window.addEventListener("DOMContentLoaded", function() {
-// function setCursorPosition(pos, elem) {
-//     elem.focus();
-//     if (elem.setSelectionRange) elem.setSelectionRange(pos, pos);
-//     else if (elem.createTextRange) {
-//         var range = elem.createTextRange();
-//         range.collapse(true);
-//         range.moveEnd("character", pos);
-//         range.moveStart("character", pos);
-//         range.select()
-//     }
-// }
-
-// function mask(event) {
-//     var matrix = "+7 (___) ___ ____",
-//         i = 0,
-//         def = matrix.replace(/\D/g, ""),
-//         val = this.value.replace(/\D/g, "");
-//     if (def.length >= val.length) val = def;
-//     this.value = matrix.replace(/./g, function(a) {
-//         return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
-//     });
-//     if (event.type == "blur") {
-//         if (this.value.length == 2) this.value = ""
-//     } else setCursorPosition(this.value.length, this)
-// };
-//     var input = document.getElementsByTagName("input")[4];
-//     input.addEventListener("input", mask, false);
-//     input.addEventListener("focus", mask, false);
-//     input.addEventListener("blur", mask, false);
-// });
-
-
-
-
-
-// class Options {
-//     constructor(height, width, background, margin, fontSize, textAlign) {
-//         this.height = height + 'px';
-//         this.width = width + 'px';
-//         this.background = background;
-//         this.marginTop = margin + 'px';
-//         this.fontSize = fontSize + 'px';
-//         this.textAlign = textAlign;
-//     }
-
-
-//     createDiv() {
-//         let wrap = document.querySelector('.description'),
-//             div = document.createElement('div');
-//         wrap.appendChild(div);
-//         div.textContent = 'Hello Boris!';
-//         div.style.height = this.height;
-//         div.style.width = this.width;
-//         div.style.marginTop = this.marginTop;
-//         div.style.background = this.background;
-//         div.style.fontSize = this.fontSize;
-//         div.style.textAlign = this.textAlign;
-//         div.style.borderRadius = this.borderRadius;
-//         div.classList.add('option');
-
-//     }
-// }
-
-// class Passion extends Options {
-//     constructor(height, width, background, margin, fontSize, textAlign, borderRadius) {
-//         super(height, width, background, margin, fontSize, textAlign);
-//         this.borderRadius = borderRadius + 'px';
-//     }
-
-//     Adds() {
-
-//         super.createDiv();
-
-//     }
-
-// }
-
-// let divs = new Options(40, 180, 'yellow', 10, 25, 'center');
-// divs.createDiv();
-// // console.log(typeof divs.createDiv);
-
-// let der = new Passion(40, 180, 'blue', 10, 25, 'center', 5);
-// der.Adds();
-// //   der.createDiv();
-// console.log(divs);
-// console.log(der);
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-function tabs() {
-    let tab = document.querySelectorAll('.info-header-tab'),
-        info = document.querySelector('.info-header'),
-        tabContent = document.querySelectorAll('.info-tabcontent');
-
-    function hideTabContent(a) {
-        for (let i = a; i < tabContent.length; i++) {
-
-            tabContent[i].classList.remove('show');
-            tabContent[i].classList.add('hide');
-        }
-    }
-
-    hideTabContent(1);
-
-    function showTabContent(b) {
-
-        if (tabContent[b].classList.contains('hide')) {
-
-            tabContent[b].classList.remove('hide');
-            tabContent[b].classList.add('show');
-
-
-        }
-    }
-
-    info.addEventListener('click', function (event) {
-        let target = event.target;
-        if (target && target.classList.contains('info-header-tab')) {
-            for (let i = 0; i < tab.length; i++) {
-                if (target == tab[i]) {
-                    hideTabContent(0);
-                    showTabContent(i);
-                    break;
-
-                }
-
-            }
-
-        }
-    });
-}
-
-module.exports = tabs;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-function timer() {
-    let deadline = '2020-04-30',
-        region = 6;
-
-    function getTimeRemaining(endtime) {
-        let time = Date.parse(deadline) - Date.parse(new Date()),
-            seconds = Math.floor((time / 1000) % 60),
-            minutes = Math.floor((time / 1000 / 60) % 60),
-            hours = Math.floor(((time / 1000 / 60 / 60) - region) % 24),
-            days = Math.floor((time / 1000 / 60 / 60 / 24));
-
-        return {
-
-            'total': time,
-            'days': days,
-            'hours': hours,
-            'minutes': minutes,
-            'seconds': seconds
-        };
-    }
-
-    function SetClock(id, endtime) {
-        let timer = document.getElementById(id),
-            days = timer.querySelector('.days'),
-            hours = timer.querySelector('.hours'),
-            minutes = timer.querySelector('.minutes'),
-            seconds = timer.querySelector('.seconds'),
-            timeInterval = setInterval(updateClock, 1000);
-        // timer.style.padding = '20px';
-
-        function updateClock() {
-            let t = getTimeRemaining(endtime);
-
-            if (t.days >= 10) {
-                days.textContent = t.days;
-
-            } else {
-                days.textContent = '0' + t.days;
-
-            }
-
-            if (t.hours >= 10) {
-                hours.textContent = t.hours;
-
-            } else {
-                hours.textContent = '0' + t.hours;
-
-            }
-
-            if (t.minutes >= 10) {
-                minutes.textContent = t.minutes;
-
-            } else {
-                minutes.textContent = '0' + t.minutes;
-
-            }
-
-            if (t.seconds >= 10) {
-                seconds.textContent = t.seconds;
-
-            } else {
-                seconds.textContent = '0' + t.seconds;
-
-            }
-
-
-            if (t.total <= 0) {
-                clearInterval(timeInterval);
-
-            }
-        }
-
-
-
-    }
-    SetClock('timer', deadline);
-
-}
-
-module.exports = timer;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-function modal() {
-    
-    document.body.addEventListener('click', function (event) {
-        let overlay = document.querySelector('.overlay'),
-            close = document.querySelector('.popup-close');
-
-        if (event.target && event.target.classList.contains('description-btn')) {
-
-            overlay.style.display = 'block';
-            event.target.classList.add('more-splash');
-            document.body.style.overflow = 'hidden';
-        } else if (event.target && event.target.classList.contains('more')) {
-
-            overlay.style.display = 'block';
-            event.target.classList.add('more-splash');
-            document.body.style.overflow = 'hidden';
-        }
-
-        close.addEventListener('click', function (event) {
-            overlay.style.display = 'none';
-            document.body.style.overflow = '';
-
-            this.classList.remove('more-splash');
-
-
-        }.bind(event.target));
-
-
-    });
-}
-
-module.exports = modal;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-function form() {
-    //Form
-  
-    
-
-    
-
-    let message = {
-        loading: 'Загрузка...',
-        success: 'Спасибо! Скоро мы с вами свяжемся.',
-        failure: 'Что- то пошло не так!'
-
-    };
-
-    let form = document.querySelector('.main-form'),
-        formContact = document.querySelector('#form'),
-        input = form.getElementsByTagName('input'),
-        input2 = formContact.getElementsByTagName('input'),
-        statusMessadge = document.createElement('div');
-    statusMessadge.classList.add('status');
-    form.style.height = '150px';
-
-    function setText() {
-
-        let timeInterval = setTimeout(updateText, 3000);
-
-        function updateText() {
-            statusMessadge.textContent = '';
-
-            clearTimeout(timeInterval);
-
-        }
-
-    };
-
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        form.appendChild(statusMessadge);
-        let formData = new FormData(form);
-
-
-        function postData(formData) {
-
-            return new Promise(function (resolve, reject) {
-                let request = new XMLHttpRequest();
-                request.open('POST', 'server.php');
-                // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
-                request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON
-
-                request.onreadystatechange = () => {
-                    if (request.readyState < 4) {
-                        resolve()
-
-                    } else if (request.readyState === 4) {
-                        if (request.status == 200 && request.status < 300) {
-                            resolve()
-                        } else {
-                            reject()
-                        }
-                    }
-                }
-                //JSON
-                formData.forEach(function (value, key) {
-                    formData[key] = value;
-                });
-                let json = JSON.stringify(formData);
-                //JSON
-
-                //JSON
-                request.send(json);
-                //для HTML
-
-            })
-        }
-
-        function clearInput() {
-
-            for (let i = 0; i < input.length; i++) {
-                input[i].value = '';
-            }
-
-        }
-
-        postData(formData)
-            .then(() => {
-                statusMessadge.textContent = message.loading;
-                setText();
-            })
-            .then(() => {
-                statusMessadge.textContent = message.success;
-                setText();
-            })
-            .catch(() => {
-                statusMessadge.textContent = message.failure;
-                setText();
-            })
-            .then(clearInput)
-
-
-    });
-
-
-
-
-
-    formContact.addEventListener('submit', function (event) {
-        event.preventDefault();
-        formContact.appendChild(statusMessadge);
-
-
-
-        let request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // для HTML
-        request.setRequestHeader('Content-type', 'application/json; charset=utf-8'); // для JSON
-
-        let formData = new FormData(formContact);
-
-
-        //JSON
-
-        formData.forEach(function (value, key) {
-            formData[key] = value;
-
-        });
-        let json = JSON.stringify(formData);
-
-
-        request.send(json);
-        //JSON
-
-
-        //для HTML
-        // request.send(formData);
-
-        statusMessadge.style.color = 'white';
-        statusMessadge.style.marginTop = '10px';
-        request.addEventListener('readystatechange', () => {
-            if (request.readyState < 4) {
-                statusMessadge.textContent = message.loading;
-                setText();
-            } else if (request.readyState === 4 && request.status == 200) {
-                statusMessadge.textContent = message.success;
-                setText();
-            } else {
-                statusMessadge.textContent = message.failure;
-                setText();
-            }
-
-        });
-
-        for (let i = 0; i < input2.length; i++) {
-            input2[i].value = '';
-        }
-
-        
-
-    });
-
-}
-
-module.exports = form;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-function slider() {
-    let sliderIndex = 1,
-        slides = document.querySelectorAll('.slider-item'),
-        prev = document.querySelector('.prev'),
-        next = document.querySelector('.next'),
-        dotsWarp = document.querySelector('.slider-dots'),
-        dots = document.querySelectorAll('.dot');
-    showSlides(1);
-    autoSlides();
-
-    document.body.addEventListener('mouseover', (event) => {
-        if (event.target && event.target.tagName == 'IMG') {
-
-            prev.style.display = '';
-            next.style.display = '';
-        }
-    });
-
-    function autoSlides() {
-        setInterval(() => {
-            showSlides(sliderIndex);
-            sliderIndex++;
-            prev.style.display = 'none';
-            next.style.display = 'none';
-        }, 6000);
-
-
-
-
-    }
-
-    function showSlides(n) {
-        if (n > slides.length) {
-            sliderIndex = 1;
-        }
-        if (n < 1) {
-            sliderIndex = slides.length;
-        }
-
-        slides.forEach((item) => {
-            item.style.display = 'none'
-        });
-
-        dots.forEach((item) => {
-            item.classList.remove('dot-active')
-        });
-
-        slides[sliderIndex - 1].style.display = '';
-        dots[sliderIndex - 1].classList.add('dot-active');
-    }
-
-    function plusSlides(n) {
-        showSlides(sliderIndex += n);
-    }
-
-    function currentSlides(n) {
-        showSlides(sliderIndex = n);
-    }
-
-    prev.addEventListener('click', () => {
-        plusSlides(-1);
-    });
-
-    next.addEventListener('click', () => {
-        plusSlides(1);
-    });
-
-    dotsWarp.addEventListener('click', (event) => {
-        for (let i = 0; i < dots.length + 1; i++) {
-            if (event.target == dots[i - 1] && event.target.classList.contains('dot')) {
-                currentSlides(i);
-            }
-        }
-
-    });
-
-}
-
-module.exports = slider;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-function tel() {
-   function setCursorPosition(pos, elem) {
-    elem.focus();
-    if (elem.setSelectionRange) elem.setSelectionRange(pos, pos);
-    else if (elem.createTextRange) {
-        var range = elem.createTextRange();
-        range.collapse(true);
-        range.moveEnd("character", pos);
-        range.moveStart("character", pos);
-        range.select()
-    }
-}
-
-function mask(event) {
-    var matrix = "+7 (___) ___ ____",
-        i = 0,
-        def = matrix.replace(/\D/g, ""),
-        val = this.value.replace(/\D/g, "");
-    if (def.length >= val.length) val = def;
-    this.value = matrix.replace(/./g, function(a) {
-        return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
-    });
-    if (event.type == "blur") {
-        if (this.value.length == 2) this.value = ""
-    } else setCursorPosition(this.value.length, this)
-};
-    var input = document.getElementsByTagName("input")[4];
-    input.addEventListener("input", mask, false);
-    input.addEventListener("focus", mask, false);
-    input.addEventListener("blur", mask, false);
-
-    var inputs = document.getElementsByTagName("input")[3];
-    inputs.addEventListener("input", mask, false);
-    inputs.addEventListener("focus", mask, false);
-    inputs.addEventListener("blur", mask, false);
-
-
-    
-    
-}
-
-module.exports = tel;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-function calc() {
-    let persons = document.querySelectorAll('.counter-block-input')[0],
-        restDays = document.querySelectorAll('.counter-block-input')[1],
-        place = document.getElementById('select'),
-        totalValue = document.getElementById('total'),
-        personsSum = 0,
-        daysSum = 0,
-        total = 0;
-
-    totalValue.textContent = 0;
-
-    persons.addEventListener('change', function () {
-        personsSum = +this.value;
-        localStorage.setItem("people", personsSum);
-        total = (daysSum + personsSum) * 7000;
-
-        if (restDays.value == '' && isNaN(restDays)) {
-            totalValue.textContent = 0;
-
-        } else if (persons.value == '') {
-            totalValue.textContent = 0;
-
-        } else {
-            totalValue.textContent = total;
-        }
-    });
-
-    restDays.addEventListener('change', function () {
-        daysSum = +this.value;
-        localStorage.setItem("days", daysSum);
-        total = (daysSum + personsSum) * 7000;
-
-        if (persons.value == '' && isNaN(persons)) {
-            totalValue.textContent = 0;
-
-        } else if (restDays.value == '') {
-            totalValue.textContent = 0;
-
-        } else {
-            totalValue.textContent = total;
-        }
-    });
-
-
-    place.addEventListener('change', function () {
-        if (restDays.value == '' || persons.value == '') {
-            totalValue.textContent = 0;
-        } else {
-            let a = total;
-
-            totalValue.textContent = a * this.options[this.selectedIndex].value;
-        }
-
-    });
-
-}
-
-module.exports = calc;
+eval("window.addEventListener('DOMContentLoaded', function () {\r\n\r\n    'use strict';\r\n\r\n    let tabs = __webpack_require__(/*! ./parts/tabs.js */ \"./src/js/parts/tabs.js\"),\r\n        timer = __webpack_require__(/*! ./parts/timer.js */ \"./src/js/parts/timer.js\"),\r\n        modal = __webpack_require__(/*! ./parts/modal.js */ \"./src/js/parts/modal.js\"),\r\n        form = __webpack_require__(/*! ./parts/form.js */ \"./src/js/parts/form.js\"),\r\n        slider = __webpack_require__(/*! ./parts/slider.js */ \"./src/js/parts/slider.js\"),\r\n        tel = __webpack_require__(/*! ./parts/tel.js */ \"./src/js/parts/tel.js\"),\r\n        calc = __webpack_require__(/*! ./parts/calc.js */ \"./src/js/parts/calc.js\");\r\n\r\n    tabs();\r\n    calc();\r\n    form();\r\n    slider();\r\n    timer();\r\n    modal();\r\n    tel();\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n});\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/js/script.js?");
 
 /***/ })
-/******/ ]);
+
+/******/ });
