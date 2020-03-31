@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/soburboris/yoga#readme",
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.0",
     "babel-loader": "^8.1.0",
     "copy-webpack-plugin": "^5.1.1",
@@ -35,6 +37,8 @@
     "xml-loader": "^1.2.1"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "core-js": "^3.6.4",
     "jquery": "^3.4.1",
     "normalize.css": "^8.0.1"
   }

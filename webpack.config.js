@@ -5,7 +5,7 @@ let path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebPackPlugin = require('copy-webpack-plugin');
 
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 
 module.exports = {
@@ -16,13 +16,14 @@ module.exports = {
     path: __dirname + '/src/'
 
   },
-  resolve: {
-    alias: { // создание краткого пути до файлов
-      '@assets': path.resolve(__dirname, 'src/assets'),
-      '@': path.resolve(__dirname, 'dust'),
 
-    }
-  },
+  // resolve: {
+  //   alias: { // создание краткого пути до файлов
+  //     '@assets': path.resolve(__dirname, 'src/assets'),
+  //     '@': path.resolve(__dirname, 'dust'),
+
+  //   }
+  // },
   optimization: { // для создания вендора, который обслуживает  jquery!!!
     splitChunks: {
       chunks: 'all'
@@ -35,7 +36,30 @@ module.exports = {
   // devtool: "source-map",
 
   module: {
-    rules: [{
+    rules: [
+      {
+        test: /\.js$/,
+        // exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader?optional[]=runtime',
+          options: {
+            presets: [
+              ["@babel/env", {
+                targets: {
+                  edge: "17",
+                  firefox: "60",
+                  chrome: "67",
+                  safari: "11.1",
+                  ie: "11"
+                },
+                // useBuiltIns: "usage"
+              }]
+            ]
+          }
+        }
+      },
+
+      {
         test: /\.css$/,
         use: [
           'style-loader',
@@ -67,15 +91,13 @@ module.exports = {
     ],
   },
   plugins: [
-    // new UglifyJsPlugin(),
+    new UglifyJsPlugin(),
     new HTMLWebpackPlugin({
       template: './index.html'
     }),
-    new CopyWebPackPlugin([
-      {
-        from: path.resolve(__dirname, 'src/'),
-        to: path.resolve(__dirname, 'dust')
-      }
-    ])
+    new CopyWebPackPlugin([{
+      from: path.resolve(__dirname, 'src/'),
+      to: path.resolve(__dirname, 'dust')
+    }])
   ]
 };
